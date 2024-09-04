@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const userRouter = require("./Routers/userRoute");
+const authRouter = require("./Routers/authRoute");
+const bcrypt = require("bcrypt"); 
+
 const app = express();
 
 // FIRST MIDDLEWARE
@@ -14,6 +17,7 @@ app.use(function (res, req, next) {
 
 // THIRD MIDDLEWARE
 app.use("/api/users", userRouter)
+app.use("/api/users", authRouter)
 
 // STRING CONNECTION
 const dbString =

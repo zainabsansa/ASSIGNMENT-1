@@ -5,6 +5,8 @@ const router = express.Router();
 // CREATE USER
 router.post("/createUser", userController.createUser);
 
+
+
 // GET USER
 router.get("/getUser", userController.getUser);
 
