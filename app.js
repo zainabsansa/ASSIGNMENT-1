@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const userRouter = require("./Routers/userRoute");
-const authRouter = require("./Routers/authRoute");
-const bcrypt = require("bcrypt"); 
+// const userRouter = require("./Routers/userRoute");
+// const authRouter = require("./Routers/authRoute");
+const bcrypt = require("bcryptjs"); 
 
 const app = express();
 
@@ -16,8 +16,9 @@ app.use(function (res, req, next) {
 });
 
 // THIRD MIDDLEWARE
-app.use("/api/users", userRouter)
-app.use("/api/users", authRouter)
+app.use("/api/users", userRouter);
+app.use("/api/users", authRouter);
+app.use("/api/products", productRouter);
 
 // STRING CONNECTION
 const dbString =
