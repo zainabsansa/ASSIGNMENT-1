@@ -1,7 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const userRouter = require("./Routers/userRoute");
-// const authRouter = require("./Routers/authRoute");
+const userRouter = require("./Routers/userRoute");
+const authRouter = require("./Routers/authRoute");
+const productRouter = require("./Routers/productRoute");
+
+require('dotenv').config();
+
 const bcrypt = require("bcryptjs"); 
 
 const app = express();
@@ -10,31 +14,32 @@ const app = express();
 app.use(express.json());
 
 // SECOND MIDDLEWARE
-app.use(function (res, req, next) {
+app.use(function (req, res, next) {
   console.log("Fetching User API...");
   next();
 });
 
 // THIRD MIDDLEWARE
 app.use("/api/users", userRouter);
-app.use("/api/users", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
 
-// STRING CONNECTION
-const dbString =
-  "mongodb+srv://tunrayotemitope05:JQNd4DKWM3LyAWKh@cluster0.xe1g5ie.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// DATABASE CONNECTION STRING FROM ENVIRONMENT VARIABLE
+const dbString = process.env.DB_CONNECTION_STRING;
 
 async function connectDB() {
   try {
     await mongoose.connect(dbString);
     console.log("DataBase successfully connected");
   } catch (err) {
-    console.log(err.message);
+    console.log("Database connection failed:",err.message);
+    process.exit(1); // Exit the process with a failure code
   }
 }
 connectDB();
 
 // APP listening
-app.listen(4000, "localhost", function () {
-  console.log("My app is listening on a port 4000...");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "localhost", function () {
+  console.log(`My app is listening on port ${PORT}...`);
 });

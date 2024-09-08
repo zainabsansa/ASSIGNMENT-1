@@ -1,20 +1,21 @@
 const express = require("express");
 const productController = require("../Controllers/productController");
-const router = express.Router();
+const protected= require("../Middlewares/protected");
+const productRouter = express.Router();
 
 // API ENDPOINT
-router.get("/get-all-products", productController.getAllProducts);
+productRouter.get("/get-all-products", productController.getAllProducts);
 
 // GETTING JUST ONE DATA
-router.get("/get-product", productController.getOneProduct);
+productRouter.get("/get-product", productController.getOneProduct);
 
 // UPDATING DATA
-router.patch("/update-product/:id", productController.updateProduct);
+productRouter.patch("/update-product/:id",protected.authProtected ,productController.updateProduct);
 
 // DELETING DATA
-router.delete("/delete-product/:productId", productController.deleteProduct);
+productRouter.delete("/delete-product/:productId",protected.authProtected ,productController.deleteProduct);
 
 // CREATING DATA
-router.post("/post-product", productController.createProduct);
+productRouter.post("/post-product", protected.authProtected, productController.createProduct);
 
-module.exports = router ;
+module.exports = productRouter ;

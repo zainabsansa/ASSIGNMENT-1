@@ -5,27 +5,30 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Name is required!"],
     min: 3,
-    trim: true
+    trim: true,
   },
-  lastName:{
+  lastName: {
     type: String,
     required: [true, "Name is required!"],
     min: 3,
+    trim: true,
   },
   email: {
     type: String,
     required: [true, "Please enter your email"],
-    trim: 2,
-    lowercase:true,
+    trim: true,
+    lowercase: true,
+    unique: true,
   },
-  password:{
+  password: {
     type: String,
-    required:true,
-    min:8
+    required: true,
+    minlength: 8,
   },
-  age: Number,
-  height: Number,
-  weight: Number,
+  age: {
+    type: Number,
+    min: [0, "Age must be positive"],
+  },
 });
 
 const User = mongoose.model("User", userSchema);

@@ -1,17 +1,16 @@
-const express = require("express");
 const User = require("../Models/userModel");
 
 // POST USER
 exports.createUser = async function (req, res) {
   try {
+    const { firstName, lastName, email, password, age } = req.body;
+
     const newUser = await User.create({
-      firstName: req.body.firstName,
-      lastName:req.body.lastName,
-      email: req.body.email,
-      password: req.body.password,
-      age: req.body.age,
-      height: req.body.height,
-      weight: req.body.weight,
+      firstName,
+      lastName,
+      email,
+      password,
+      age,
     });
 
     res.status(201).json({
@@ -34,7 +33,7 @@ exports.getUser = async function (req, res) {
     const users = await User.find();
     res.status(200).json({
       status: "success",
-      users: users,
+      users: users
     });
   } catch (err) {
     res.status(400).json({
@@ -84,7 +83,7 @@ exports.updateUser = async function (req, res) {
 // DELETE USER
 exports.deleteUser = async function (req, res) {
   try {
-    User.findByIdAndDelete(req.params.productId);
+    await User.findByIdAndDelete(req.params.productId);
     res.status(200).json({
       status: "success",
       message: "User Deleted",

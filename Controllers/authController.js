@@ -1,35 +1,35 @@
+const generateToken = require("../Helpers/authHelper");
 const User = require("../Models/userModel");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
+// Sign Up Function
 exports.signUp = async function (req, res) {
   try {
-    const emailExist = await User.findOne({ email: req.body.email });
+    const { firstName, lastName, email, password, age } = req.body;
+
+    // Check if email already exists
+    const emailExist = await User.findOne({ email });
     if (emailExist) {
-      return res.json({
-        message: "Email exists",
-      });
+      return res.status(400).json({ message: "Email already exists" });
     }
 
-    const saltRound = 10;
-    const hashedPassword = bcrypt.hashSync(req.body.password, saltRound);
+    // Hash password asynchronously
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    // Create new user
     const newUser = await User.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
+      firstName,
+      lastName,
+      email,
       password: hashedPassword,
-      age: req.body.age,
-      height: req.body.height,
-      weight: req.body.weight,
+      age,
     });
 
     res.status(201).json({
       status: "success",
-      message: "User Created",
-      data: {
-        user: newUser,
-      },
+      message: "User created successfully",
+      data: { user: newUser },
     });
   } catch (err) {
     res.status(400).json({
@@ -39,39 +39,31 @@ exports.signUp = async function (req, res) {
   }
 };
 
+// Log In Function
 exports.logIn = async function (req, res) {
   try {
-    const userAccount = await User.findOne({ email: req.body.email });
+    const { email, password } = req.body;
+
+    // Find user by email
+    const userAccount = await User.findOne({ email });
     if (!userAccount) {
-      return res.json({
-        message: "User account does not exist",
-      });
+      return res.status(400).json({ message: "User account does not exist" });
     }
 
-    const comparedPassword = bcrypt.compareSync(
-      req.body.password,
-      userAccount.password
-    );
-    if (!comparedPassword) {
-      return res.json({
-        message: "User email or password incorrect",
-      });
+    // Compare passwords asynchronously
+    const passwordMatch = await bcrypt.compare(password, userAccount.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Incorrect email or password" });
     }
 
-    // payload, secret string, options obj
-    const token = jwt.sign(
-      { id: userAccount._id },
-      "api__very__secret__string",
-      { expiresIn: "30d" }
-    );
+    // Generate token
+    const token = generateToken(userAccount._id);
 
     res.status(200).json({
       status: "success",
-      message: "User logged in",
-      data: {
-        user: userAccount,
-      },
-      token: token,
+      message: "User logged in successfully",
+      data: { user: userAccount },
+      token,
     });
   } catch (err) {
     res.status(400).json({

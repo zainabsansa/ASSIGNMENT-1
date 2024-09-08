@@ -1,19 +1,21 @@
-const express = require("express")
-const Product = require("../models/productModel");
+const express = require("express");
+const Product = require("../Models/productModel");
 
  // POST
  exports.createProduct =  async function (req, res) {
   try {
-    const newProduct = await Product.create({
-      name: req.body.name,
-      price: req.body.price,
-      description: req.body.description,
-      image: req.body.image,
+    const {creator, name, price, description, image} = req.body;
+
+    const newProduct = Product.create({
+      creator,
+      name,
+      price,
+      description,
+      image
     });
 
     res.status(201).json({
       status: "success",
-      // count: products.length,
       data: {
         products: newProduct,
       },
