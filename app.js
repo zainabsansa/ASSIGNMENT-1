@@ -6,7 +6,7 @@ const productRouter = require("./Routers/productRoute");
 
 require('dotenv').config();
 
-const bcrypt = require("bcryptjs"); 
+const bcrypt = require("bcrypt"); 
 
 const app = express();
 
@@ -39,7 +39,7 @@ async function connectDB() {
 connectDB();
 
 // APP listening
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, "localhost", function () {
   console.log(`My app is listening on port ${PORT}...`);
 });

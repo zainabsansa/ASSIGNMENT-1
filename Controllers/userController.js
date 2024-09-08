@@ -5,11 +5,28 @@ exports.createUser = async function (req, res) {
   try {
     const { firstName, lastName, email, password, age } = req.body;
 
+   // Check if email already exists
+   const emailExist = await User.findOne({ email });
+   if (emailExist) {
+     return res.status(400).json({ message: "Email already exists" });
+   }
+
+//    {
+//     "firstName": "Zainab",
+//     "lastName": "Sansa",
+//     "email": "zainabsansa03@gmail.com",
+//     "password":"nhthjhn"
+ 
+//  }
+   // Hash password asynchronously
+   const saltRounds = 10;
+   const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const newUser = await User.create({
       firstName,
       lastName,
       email,
-      password,
+      password:hashedPassword,
       age,
     });
 
@@ -33,7 +50,7 @@ exports.getUser = async function (req, res) {
     const users = await User.find();
     res.status(200).json({
       status: "success",
-      users: users
+      users: users,
     });
   } catch (err) {
     res.status(400).json({

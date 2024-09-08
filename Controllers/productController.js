@@ -6,7 +6,7 @@ const Product = require("../Models/productModel");
   try {
     const {creator, name, price, description, image} = req.body;
 
-    const newProduct = Product.create({
+    const newProduct =await Product.create({
       creator,
       name,
       price,
